@@ -11,5 +11,5 @@ export class CarsEntity extends BaseEntity {
     price: number; 
 
     @Column()
-    category_id: string;
+    category_id: number;
 }

@@ -4,58 +4,63 @@ import { ResponseData } from "src/global/globalClass";
 import { HttpMessage, HttpStatus } from "src/global/globalEnum";
 import { Product } from "src/models/product.model";
 import { ProductDto } from "src/dto/product.dto";
+import { CarsEntity } from "src/entities/cars.entity";
 @Controller('products')
 export class ProductController {
-
+    
     constructor(private readonly productService: ProductService) {}
+
     @Get()
-    getProducts():ResponseData<Product[] > {
+    async getProducts():Promise<ResponseData<CarsEntity[] > >{
         try {
-        return new ResponseData<Product[]>(this.productService.getProducts(),HttpStatus.SUCCESS,HttpMessage.SUCCESS);
+            const products = await this.productService.getProducts();
+        return new ResponseData<CarsEntity[]>(products,HttpStatus.SUCCESS,HttpMessage.SUCCESS);
     }
     catch (error) {
-        return new ResponseData<Product[]>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
+        return new ResponseData<CarsEntity[]>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
     }
 }
 
     @Post()
-    createProduct(@Body(new ValidationPipe())ProductDto:ProductDto):ResponseData<ProductDto> {
+    async createProduct(@Body(new ValidationPipe())productDto:ProductDto):Promise<ResponseData<CarsEntity>>{
         try {
-        return  new ResponseData<Product>(this.productService.createProduct(ProductDto),HttpStatus.SUCCESS,HttpMessage.SUCCESS);
+            const newProduct = await this.productService.createProduct(productDto);
+        return  new ResponseData<CarsEntity>(newProduct,HttpStatus.SUCCESS,HttpMessage.SUCCESS);
         }
         catch (error) {
-        return new ResponseData<Product>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
-            }
-
-    
+        return new ResponseData<CarsEntity>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
+            } 
 }
 
 
     @Get('/:id')
-    getProductById(@Param('id') id:number) :ResponseData<Product> {
+    async getProductById(@Param('id') id:number) :Promise<ResponseData<CarsEntity>> {
         try {
-        return new ResponseData<Product>(this.productService.getProductById(id),HttpStatus.SUCCESS,HttpMessage.SUCCESS);
+            const product = await this.productService.getProductById(id);
+        return new ResponseData<CarsEntity>(product,HttpStatus.SUCCESS,HttpMessage.SUCCESS);
         }   
         catch (error) {
-        return new ResponseData<Product>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
+        return new ResponseData<CarsEntity>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
             }   
     }
 
     @Put('/:id')
-    updateProduct(@Body() ProductDto: ProductDto, @Param('id') id :number) :ResponseData<Product> {
+    async updateProduct(@Body() ProductDto: ProductDto, @Param('id') id :number) :Promise<ResponseData<CarsEntity>> {
         try {
-        return new ResponseData<Product>(this.productService.updateProduct(ProductDto,id),HttpStatus.SUCCESS,HttpMessage.SUCCESS);
+            const updatedProduct = await this.productService.updateProduct(ProductDto,id);
+        return new ResponseData<CarsEntity>(updatedProduct,HttpStatus.SUCCESS,HttpMessage.SUCCESS);
         }   
         catch (error) {
-        return new ResponseData<Product>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
+        return new ResponseData<CarsEntity>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);
             }
      
     }
 
     @Delete('/:id')
-    deleteProduct(@Param('id')id:number):ResponseData<boolean> {
+    async deleteProduct(@Param('id')id:number):Promise<ResponseData<boolean>> {
         try {
-        return new ResponseData<boolean>(this.productService.deleteProduct(id),HttpStatus.SUCCESS,HttpMessage.SUCCESS);
+        const deletedProduct = await this.productService.deleteProduct(id);
+        return new ResponseData<boolean>(deletedProduct,HttpStatus.SUCCESS,HttpMessage.SUCCESS);
         }       
         catch (error) {
         return new ResponseData<boolean>(null as any,HttpStatus.ERROR,HttpMessage.ERROR);

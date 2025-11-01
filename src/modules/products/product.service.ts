@@ -1,4 +1,4 @@
-import { Injectable, Param } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ProductDto } from "src/dto/product.dto";
 import { Product } from "src/models/product.model";
 @Injectable()
@@ -30,16 +30,23 @@ import { Product } from "src/models/product.model";
          }
      
       
-         updateProduct(productDto: ProductDto, id :number) :Product {
+         updateProduct(productDto: ProductDto ,id:number) :Product {
             const index = this.products.findIndex(item => item.id === Number(id));
-            this.products[index].categoryId = productDto.categoryId;
-            this.products[index].productName = productDto.productName;
-            this.products[index].price = productDto.price;
-             return this.products[index];
+            this.products[index].categoryId =productDto.categoryId;
+            this.products[index].productName =productDto.productName;
+            this.products[index].price =productDto.price;
+            return this.products[index];
          }
+          
+        
      
         
-         deleteProduct():string {
-             return 'Product deleted successfully' ;
+         deleteProduct(id: number):boolean {
+            const index = this.products.findIndex(item => item.id === Number(id));
+             if (index !== -1) {
+                 this.products.splice(index, 1);
+                 return true;
+             }
+                return false;
          }
  }

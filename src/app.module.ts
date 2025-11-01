@@ -15,7 +15,7 @@ import { CarsEntity } from './entities/cars.entity';
       port: 3306,
       username: 'root',
       password: '1234',
-      database: 'nestjs-api-v1',
+      database: 'nestjs_api_v1',
       entities: [AccountsEntity,CategoriesEntity,CarsEntity],
       synchronize: true,
     })
